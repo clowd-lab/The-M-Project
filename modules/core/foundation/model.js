@@ -265,7 +265,20 @@ M.Model = M.Object.extend(
         /* return ref entity if property is a reference */
         if(metaProp && metaProp.dataType === 'Reference') {
             if(metaProp.refEntity) {// if entity is already loaded and assigned here in model record
-                return metaProp.refEntity;
+				if(obj && obj.force) { // Force reload
+                    var callback = this.dataProvider.isAsync ? obj.onSuccess : null
+                    this.deepFind([{
+                        prop: propName,
+                        name: metaProp.reference,
+                        model: this.modelList[metaProp.reference],
+                        m_id: recProp
+                    }], callback);
+                    if(!this.dataProvider.isAsync) { // if data provider acts synchronous, we can now return the fetched entity
+                        return metaProp.refEntity;
+                    }
+				}
+				else
+	                return metaProp.refEntity;
             } else if(recProp) { // if model record has a reference set, but it is not loaded yet
                 if(obj && obj.force) { // if force flag was set
                     /* custom call to deepFind with record passed only being the one property that needs to be filled, type of dp checked in deepFind */
