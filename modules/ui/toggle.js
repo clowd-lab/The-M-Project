@@ -29,6 +29,17 @@ M.ToggleView = M.View.extend(
      * @type String
      */
     type: 'M.ToggleView',
+    
+    /**
+     * Defines the position of the ToggleView. Possible values are:
+     *
+     * - M.BOTTOM => is a footer tab bar
+     * - M.TOP => is a header tab bar
+     * - null / not set ==> a tab bar outside header / footer
+     *
+     * @type String
+     */
+    anchorLocation: null,
 
     /**
      * States whether the toggle view currently displays its first child view or its second
@@ -60,16 +71,18 @@ M.ToggleView = M.View.extend(
      * @returns {String} The toggle view's html representation.
      */
     render: function() {
-        this.html += '<div id="' + this.id + '">';
-
+        if(this.anchorLocation) {
+            this.html += '<div id="' + this.id + '" data-role="' + this.anchorLocation + '" data-position="fixed">';
+        } 
+        else {
+            this.html += '<div id="' + this.id + '">';
+        }
         this.renderChildViews();
-
         this.html += '</div>';
-        
         return this.html;
     },
 
-    /**
+     /**
      * This method renders one child view of the toggle view, based on the isInFirstState
      * property: YES = first child view, NO = second child view.
      */
