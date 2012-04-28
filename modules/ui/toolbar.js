@@ -155,6 +155,9 @@ M.ToolbarView = M.View.extend(
         } else if(this.value) {
             this.html += '<h1>' + this.value + '</h1>';
         } else if (this.childViews) {
+			if(this.anchorLocation == M.BOTTOM)
+	            this.html += '<div style="height:38px">';
+
             var childViews = this.getChildViewsAsArray();
             var viewPositions = {};
             for(var i in childViews) {
@@ -174,9 +177,15 @@ M.ToolbarView = M.View.extend(
                         this.html += '</div>';
                         break;
                     case M.CENTER:
-                        this.html += '<h1>';
+						if(this.anchorLocation == M.TOP)
+	                        this.html += '<h1>';
+						else
+	                        this.html += '<div style="margin:5px">';
                         this.html += view.render();
-                        this.html += '</h1>';
+						if(this.anchorLocation == M.TOP)
+							this.html += '</h1>';
+						else
+							this.html += '</div>';
                         break;
                     case M.RIGHT:
                         this.html += '<div class="ui-btn-right">';
@@ -188,6 +197,9 @@ M.ToolbarView = M.View.extend(
                         return;
                 }
             }
+
+			if(this.anchorLocation == M.BOTTOM)
+				this.html += '</div>';
         }
     },
 
