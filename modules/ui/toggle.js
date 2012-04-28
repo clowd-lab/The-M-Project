@@ -132,9 +132,6 @@ M.ToggleView = M.View.extend(
             this.currentView = this[childViews[currentViewIndex]];
         }
 
-        /* call jqm to fix header/footer */
-        $.mobile.fixedToolbars.show();
-
         if(nextEvent) {
             M.EventDispatcher.callHandler(nextEvent, event, YES);
         }

@@ -194,6 +194,14 @@ M.ListView = M.View.extend(
     selectedItem: null,
 
     /**
+     * Contains a reference to the currently visible swipe delete button (if one exists).
+     *
+     * @type M.ButtonView
+     * @private
+     */
+    swipeButton: null,
+
+    /**
      * This method renders the empty list view either as an ordered or as an unordered list. It also applies
      * some styling, if the corresponding properties where set.
      *
@@ -302,6 +310,9 @@ M.ListView = M.View.extend(
             return;
         }
 
+        /* check if there is an events propety specified for the template or if we should use the list's events */
+        templateView.events = templateView.events ? templateView.events : this.events;
+
         /* If there is an items property, re-assign this to content, otherwise iterate through content itself */
         if(this.items) {
             content = content[this.items];
@@ -318,9 +329,6 @@ M.ListView = M.View.extend(
 
         /* Finally let the whole list look nice */
         this.themeUpdate();
-
-        /* At last fix the toolbar */
-        $.mobile.fixedToolbars.show();
     },
 
     /**
@@ -362,37 +370,7 @@ M.ListView = M.View.extend(
                 obj.modelId = item[that.idName];
             }
 
-            /* Get the child views as an array of strings */
-            var childViewsArray = obj.getChildViewsAsArray();
-
-            /* If the item is a model, read the values from the 'record' property instead */
-            var record = item.type === 'M.Model' ? item.record : item;
-
-            /* Iterate through all views defined in the template view */
-            for(var i in childViewsArray) {
-                /* Create a new object for the current view */
-                obj[childViewsArray[i]] = obj[childViewsArray[i]].design({});
-
-                var regexResult = null;
-                if(obj[childViewsArray[i]].computedValue) {
-                    /* This regex looks for a variable inside the template view (<%= ... %>) ... */
-                    regexResult = /^<%=\s+([.|_|-|$|§|a-zA-Z]+[0-9]*[.|_|-|$|§|a-zA-Z]*)\s*%>$/.exec(obj[childViewsArray[i]].computedValue.valuePattern);
-                } else {
-                    regexResult = /^<%=\s+([.|_|-|$|§|a-zA-Z]+[0-9]*[.|_|-|$|§|a-zA-Z]*)\s*%>$/.exec(obj[childViewsArray[i]].valuePattern);
-                }
-
-                /* ... if a match was found, the variable is replaced by the corresponding value inside the record */
-                if(regexResult) {
-                    switch (obj[childViewsArray[i]].type) {
-                        case 'M.LabelView':
-                        case 'M.ButtonView':
-                        case 'M.ImageView':
-                        case 'M.TextFieldView':
-                            obj[childViewsArray[i]].value = record[regexResult[1]];
-                            break;
-                    }
-                }
-            }
+            obj = that.cloneObject(obj, item);
 
             /* If edit mode is on, render a delete button */
             if(that.inEditMode) {
@@ -427,10 +405,52 @@ M.ListView = M.View.extend(
             }
 
             /* ... once it is in the DOM, make it look nice */
-            for(var i in childViewsArray) {
+            var childViewsArray = obj.getChildViewsAsArray();
+            for(var i in obj.getChildViewsAsArray()) {
                 obj[childViewsArray[i]].theme();
             }
         });
+    },
+
+    /**
+     * This method clones an object of the template including its sub views (recursively).
+     *
+     * @param {Object} obj The object to be cloned.
+     * @param {Object} item The current item (record/data).
+     * @private
+     */
+    cloneObject: function(obj, item) {
+        /* Get the child views as an array of strings */
+        var childViewsArray = obj.childViews ? obj.getChildViewsAsArray() : [];
+
+        /* If the item is a model, read the values from the 'record' property instead */
+        var record = item.type === 'M.Model' ? item.record : item;
+
+        /* Iterate through all views defined in the template view */
+        for(var i in childViewsArray) {
+            /* Create a new object for the current view */
+            obj[childViewsArray[i]] = obj[childViewsArray[i]].design({});
+
+            /* create childViews of the current object */
+            obj[childViewsArray[i]] = this.cloneObject(obj[childViewsArray[i]], item);
+
+            /* This regex looks for a variable inside the template view (<%= ... %>) ... */
+            var regexResult = /^<%=\s+([.|_|-|$|§|@|a-zA-Z0-9]+)\s*%>$/.exec(obj[childViewsArray[i]].computedValue ? obj[childViewsArray[i]].computedValue.valuePattern : obj[childViewsArray[i]].valuePattern);
+
+            /* ... if a match was found, the variable is replaced by the corresponding value inside the record */
+            if(regexResult) {
+                switch (obj[childViewsArray[i]].type) {
+                    case 'M.LabelView':
+                    case 'M.ButtonView':
+                    case 'M.ImageView':
+                    case 'M.TextFieldView':
+                        obj[childViewsArray[i]].value = record[regexResult[1]];
+                        break;
+                }
+            }
+        }
+
+        return obj;
     },
 
     /**
@@ -485,13 +505,19 @@ M.ListView = M.View.extend(
      * @param {String} listItemId The id of the list item to be set active.
      */
     setActiveListItem: function(listItemId, event, nextEvent) {
+        /* if there is a swipe button visible, do nothing but hide that button */
+        if(this.swipeButton) {
+            this.hideSwipeButton();
+            return;
+        }
+
         if(this.selectedItem) {
             this.selectedItem.removeCssClass('ui-btn-active');
         }
         this.selectedItem = M.ViewManager.getViewById(listItemId);
 
         /* is the selection list items are selectable, activate the right one */
-        if(this.listItemTemplateView && this.listItemTemplateView.isSelectable) {
+        if(!this.listItemTemplateView || (this.listItemTemplateView && this.listItemTemplateView.isSelectable)) {
             this.selectedItem.addCssClass('ui-btn-active');
         }
 
@@ -551,6 +577,61 @@ M.ListView = M.View.extend(
         if(nextEvent) {
             M.EventDispatcher.callHandler(nextEvent, event, NO, [id, modelId]);
         }
+    },
+
+    showSwipeButton: function(id, event, nextEvent) {
+        var listItem = M.ViewManager.getViewById(id);
+
+        /* reset the selection for better visual effect */
+        this.resetActiveListItem();
+
+        if(!listItem.swipeButton) {
+            M.Logger.log('You need to specify a valid button with the \'swipeButton\' property of your list template!', M.WARN);
+        } else {
+            var previouslistItem = this.swipeButton ? this.swipeButton.parentView : null;
+
+            if(previouslistItem) {
+                this.hideSwipeButton();
+            }
+
+            if(!previouslistItem) {
+                this.swipeButton = M.ButtonView.design(
+                    listItem.swipeButton
+                );
+                this.swipeButton.value = this.swipeButton.value ? this.swipeButton.value : 'delete';
+                this.swipeButton.parentView = M.ViewManager.getViewById(id);
+                this.swipeButton.cssClass = this.swipeButton.cssClass ? this.swipeButton.cssClass + ' tmp-swipe-button' : 'a tmp-actionsheet-destructive-button tmp-swipe-button';
+                this.swipeButton.value = this.swipeButton.value ? this.swipeButton.value : 'delete';
+                this.swipeButton.internalEvents = {
+                    tap: {
+                        target: listItem,
+                        action: 'swipeButtonClicked'
+                    }
+                };
+
+                $('#' + id).append(this.swipeButton.render());
+                this.swipeButton.theme();
+                this.swipeButton.registerEvents();
+                $('#' + this.swipeButton.id).css('height', 0.7 * $('#' + id).outerHeight());
+                $('#' + this.swipeButton.id).css('top', Math.floor(0.15 * $('#' + id).outerHeight()));
+                $('#' + id + '>div.ui-btn-inner').css('margin-right', parseInt($('#' + this.swipeButton.id).css('width')) + parseInt($('#' + this.swipeButton.id).css('right')));
+
+                /* register tap/click for the page so we can hide the button again */
+                var that = this;
+                $('#' + M.ViewManager.getCurrentPage().id).bind('click tap', function() {
+                    that.hideSwipeButton();
+                });
+            }
+        }
+    },
+
+    hideSwipeButton: function() {
+        $('#' + this.swipeButton.id).hide();
+        $('#' + this.swipeButton.id).parent('li').find('div.ui-btn-inner').css('margin-right', 0);
+        this.swipeButton = null;
+
+        /* un-register tap/click for the page */
+        $('#' + M.ViewManager.getCurrentPage().id).unbind('click tap');
     }
 
 });
