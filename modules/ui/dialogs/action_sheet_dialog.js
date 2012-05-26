@@ -187,8 +187,8 @@ M.ActionSheetDialogView = M.DialogView.extend(
         });
 
         /* slide the dialog in */
-        dialog.removeClass('slideup out reverse');
-        dialog.addClass('slideup in');
+        //dialog.removeClass('pop out');
+        //dialog.addClass('pop in');
 
         /* reposition, but wait a second */
         var that = this;
