@@ -393,9 +393,11 @@ M.TextFieldView = M.View.extend(
      */
     lostFocus: function(id, event, nextEvent) {
         /* if this is a native date field, get the value from dom */
-        if(_.include(this.dateInputTypes, this.inputType) && M.Environment.supportsInputType(this.inputType) && this.useNativeImplementationIfAvailable) {
+        /* Commenting this out. Need to update form DOM for all cases. Will file an issue with M-Project
+         * if(_.include(this.dateInputTypes, this.inputType) && M.Environment.supportsInputType(this.inputType) && this.useNativeImplementationIfAvailable) {
             this.setValueFromDOM();
-        }
+        }*/
+        this.setValueFromDOM();
 
         if(this.initialText && !this.value) {
             this.setValue(this.initialText, NO);
