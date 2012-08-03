@@ -161,6 +161,8 @@ M.Request = M.Object.extend(
      */
     request: null,
 
+	contentType: null,
+
     /**
      * Initializes a request. Sets the parameter of this request object with the passed values.
      *
@@ -182,6 +184,7 @@ M.Request = M.Object.extend(
             url: obj['url'] ? obj['url'] : this.url,
             isAsync: (obj['isAsync'] !== undefined && obj['isAsync'] !== null) ? obj['isAsync'] : this.isAsync,
             isJSON: (obj['isJSON'] !== undefined && obj['isJSON'] !== null) ? obj['isJSON'] : this.isJSON,
+            contentType: (obj['contentType'] !== undefined && obj['contentType'] !== null) ? obj['contentType'] : this.contentType,
             timeout: obj['timeout'] ? obj['timeout'] : this.timeout,
             data: obj['data'] ? obj['data'] : this.data,
             callbacks: obj['callbacks'],
@@ -289,7 +292,7 @@ M.Request = M.Object.extend(
      * Needs init first!
      */
     send: function(){
-        this.request = $.ajax({
+		var params = {
             type: this.method,
             url: this.url,
             async: this.isAsync,
@@ -302,7 +305,10 @@ M.Request = M.Object.extend(
             success: this.internalOnSuccess,
             error: this.internalOnError,
             cache: !this.sendTimestamp
-        });
+		};
+		if(this.contentType !== null)
+			params.contentType = this.contentType;
+        this.request = $.ajax(params);
     },
 
     /**
