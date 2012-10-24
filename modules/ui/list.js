@@ -137,6 +137,13 @@ M.ListView = M.View.extend(
      * @type Boolean
      */
     doNotOverlapAtBottom: NO,
+    
+    /**
+     * If you don't want the -15px margin around the edges
+     *
+     * @type Boolean
+     */
+    noMargin: NO,
 
     /**
      * The list view's search bar.
@@ -569,6 +576,8 @@ M.ListView = M.View.extend(
      */
     style: function() {
         var html = '';
+        if( this.noMargin === YES )
+            html += 'style="margin: 0px" '
         if(this.cssClass || this.doNotOverlapAtTop || this.doNotOverlapAtBottom) {
             html += ' class="'
                 + (this.cssClass ? this.cssClass : '')

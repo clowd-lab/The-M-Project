@@ -77,6 +77,8 @@ M.TableView = M.View.extend(
      * @type Object
      */
     header: null,
+    
+    headerCss: null,
 
     /**
      * Renders a table view as a table element within a div box.
@@ -131,7 +133,7 @@ M.TableView = M.View.extend(
             if(this.header.cols && this.header.cols.length > 0) {
                 html = '<colgroup>';
                 _.each(this.header.cols, function(col) {
-                    html += '<col width="' + col + '">';
+                    html += '<col span="1" style="width: ' + col + '">';
                 });
                 html += '</colgroup>';
                 $('#' + this.id).prepend(html);
@@ -139,9 +141,13 @@ M.TableView = M.View.extend(
 
             /* render the table header */
             html = '<tr>';
+            var headerCss = '';
+            if( this.headerCss != undefined )
+                headerCss = this.headerCss;
             _.each(this.header.data, function(col) {
-                html += '<th class="tmp-table-th">' + (col && col.toString() ? col.toString() : '') + '</th> ';
-            });
+                    html += '<th class="' + headerCss + ' tmp-table-th">';
+                    html += (col && col.toString() ? col.toString() : '') + '</th> ';
+                });
             html += '</tr>';
             this.addRow(html, YES);
         }
