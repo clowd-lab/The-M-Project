@@ -397,7 +397,7 @@ M.CarouselView = M.View.extend(
 
 			 /* since triggering the change doesn't work Eddie added this */
 			if( nextItem !== that.activeItem && that.events.change.action !== undefined )
-				that.events.change.action(that.id,that.nextItem);
+				that.events.change.action(that.id,nextItem);
 
                             if(nextItem !== that.activeItem) {
                                 $('#' + that.id + '_paginator_' + that.activeItem).removeClass('tmp-carousel-paginator-item-active');
