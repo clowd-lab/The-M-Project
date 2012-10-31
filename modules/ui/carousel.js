@@ -395,6 +395,10 @@ M.CarouselView = M.View.extend(
                                 nextItem = Math.abs(Math.ceil(that.iScroll.y / height)) + 1;
                             }
 
+			 /* since triggering the change doesn't work Eddie added this */
+			if( nextItem !== that.activeItem && that.events.change.action !== undefined )
+				that.events.change.action(that.id,that.nextItem);
+
                             if(nextItem !== that.activeItem) {
                                 $('#' + that.id + '_paginator_' + that.activeItem).removeClass('tmp-carousel-paginator-item-active');
                                 that.activeItem = nextItem;
@@ -402,7 +406,7 @@ M.CarouselView = M.View.extend(
                             }
 
                             /* trigger change event for the button group */
-                            $('#' + that.id).trigger('change');
+                            $('#' + that.id).trigger('change'); // doesn't work for some reason
                         }
                     });
                 }
