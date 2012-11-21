@@ -146,7 +146,9 @@ M.ListItemView = M.View.extend(
                     this.renderChildViews();
                     this.html += '</a>';
                 } else {
+                    this.html += '<div class="tmp-nonselectable-listitem">';
                     this.renderChildViews();
+                    this.html += '</div>';
                 }
             }
         } else if(this.value) {

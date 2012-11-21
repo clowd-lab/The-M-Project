@@ -13,6 +13,13 @@
 
 }
 
+.tmp-nonselectable-listitem {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 0px;
+}
+
 .tmp-dialog-header {
     height: 20%;
     border-top-right-radius: 8px;
