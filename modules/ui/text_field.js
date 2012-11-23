@@ -93,6 +93,7 @@ M.INPUT_DATETIME = 'datetime';
  */
 M.INPUT_DATETIME_LOCAL = 'datetime-local';
 
+
 /**
  * @class
  *
@@ -220,6 +221,14 @@ M.TextFieldView = M.View.extend(
      * @type String
      */
     cssClassForAsterisk: null,
+    
+    /**
+     * This property can be used to assign a css inline style to the textbox to override 
+     * jquery stuff i.e. cssStyle="height: 400px".
+     *
+     * @type String
+     */
+    cssStyle: null,
 
     /**
      * Renders a TextFieldView
@@ -430,6 +439,9 @@ M.TextFieldView = M.View.extend(
         var html = ' style="';
         if(this.isInline) {
             html += 'display:inline;';
+        }
+        else if(this.cssStyle) {
+            html += this.cssStyle;
         }
         html += '"';
 

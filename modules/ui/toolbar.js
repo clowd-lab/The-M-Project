@@ -130,78 +130,71 @@ M.ToolbarView = M.View.extend(
      * Triggers render() on all children or simply display the value as a label,
      * if it is set.
      */
-    renderChildViews: function() {
-        if(this.value && this.showBackButton) {
-            /* create the toolbar's back button */
-            this.backButton = M.ButtonView.design({
-                value: 'Back',
-                icon: 'arrow-l',
-                internalEvents: {
-                    tap: {
-                        action: function() {
-                            history.back(-1);
+        renderChildViews: function() {
+            if(this.value && this.showBackButton) {
+                /* create the toolbar's back button */
+                this.backButton = M.ButtonView.design({
+                    value: 'Back',
+                    icon: 'arrow-l',
+                    internalEvents: {
+                        tap: {
+                            action: function() {
+                                history.back(-1);
+                            }
                         }
                     }
-                }
-            });
+                });
 
-            /* render the back button and add it to the toolbar's html*/
-            this.html += '<div class="ui-btn-left">';
-            this.html += this.backButton.render();
-            this.html += '</div>';
+                /* render the back button and add it to the toolbar's html*/
+                this.html += '<div class="ui-btn-left">';
+                this.html += this.backButton.render();
+                this.html += '</div>';
 
-            /* render the centered value */
-            this.html += '<h1>' + this.value + '</h1>';
-        } else if(this.value) {
-            this.html += '<h1>' + this.value + '</h1>';
-        } else if (this.childViews) {
-			if(this.anchorLocation == M.BOTTOM)
-	            this.html += '<div style="height:38px">';
-
-            var childViews = this.getChildViewsAsArray();
-            var viewPositions = {};
-            for(var i in childViews) {
-                var view = this[childViews[i]];
-                view._name = childViews[i];
-                if( viewPositions[view.anchorLocation] ) {
-                    M.Logger.log('ToolbarView has two items positioned at M.' +
-                        view.anchorLocation + 
-                        '.  Only one item permitted in each location', M.WARN);
-                    return;
-                }
-                viewPositions[view.anchorLocation] = YES;
-                switch (view.anchorLocation) {
-                    case M.LEFT:
-                        this.html += '<div class="ui-btn-left">';
-                        this.html += view.render();
-                        this.html += '</div>';
-                        break;
-                    case M.CENTER:
-						if(this.anchorLocation == M.TOP)
-	                        this.html += '<h1>';
-						else
-	                        this.html += '<div style="margin:5px">';
-                        this.html += view.render();
-						if(this.anchorLocation == M.TOP)
-							this.html += '</h1>';
-						else
-							this.html += '</div>';
-                        break;
-                    case M.RIGHT:
-                        this.html += '<div class="ui-btn-right">';
-                        this.html += view.render();
-                        this.html += '</div>';
-                        break;
-                    default:
-                        M.Logger.log('ToolbarView children must have an anchorLocation of M.LEFT, M.CENTER, or M.RIGHT', M.WARN);
+                /* render the centered value */
+                this.html += '<h1>' + this.value + '</h1>';
+            } else if(this.value) {
+                this.html += '<h1>' + this.value + '</h1>';
+            } else if (this.childViews) {
+                if(this.anchorLocation == M.BOTTOM)
+                    this.html += '<div style="height:38px">';
+                var childViews = this.getChildViewsAsArray();
+                var viewPositions = {};
+                for(var i in childViews) {
+                    var view = this[childViews[i]];
+                    view._name = childViews[i];
+                    if( viewPositions[view.anchorLocation] ) {
+                        M.Logger.log('ToolbarView has two items positioned at M.' +
+                            view.anchorLocation + 
+                            '.  Only one item permitted in each location', M.WARN);
                         return;
+                    }
+                    viewPositions[view.anchorLocation] = YES;
+                    switch (view.anchorLocation) {
+                        case M.LEFT:
+                            this.html += '<div class="ui-btn-left">';
+                            this.html += view.render();
+                            this.html += '</div>';
+                            break;
+                        case M.CENTER:
+                            this.html += '<h1>';
+                            this.html += view.render();
+                            this.html += '</h1>';
+                            break;
+                        case M.RIGHT:
+                            this.html += '<div class="ui-btn-right">';
+                            this.html += view.render();
+                            this.html += '</div>';
+                            break;
+                        default:
+                            M.Logger.log('ToolbarView children must have an anchorLocation of M.LEFT, M.CENTER, or M.RIGHT', M.WARN);
+                            return;
+                    }
                 }
-            }
 
-			if(this.anchorLocation == M.BOTTOM)
-				this.html += '</div>';
-        }
-    },
+                if(this.anchorLocation == M.BOTTOM)
+                    this.html += '</div>';
+            }
+        },
 
     /**
      * This method is responsible for registering events for view elements and its child views. It
