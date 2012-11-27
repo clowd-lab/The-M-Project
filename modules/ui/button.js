@@ -45,6 +45,13 @@ M.ButtonView = M.View.extend(
     isIconOnly: NO,
 
     /**
+     * Determines whether to display the mini button
+     *
+     * @type Boolean
+     */
+    isMini: NO,
+
+    /**
      * This property can be used to specify a certain hyperlink type for this button. It only
      * works in combination with the hyperlinkTarget property.
      *
@@ -179,6 +186,9 @@ M.ButtonView = M.View.extend(
         if(this.isIconOnly) {
             html += ' data-iconpos="notext"';
         }
+		if(this.isMini) {
+            html += ' data-mini="true"';
+		}
         if(this.cssStyle) {
             html += 'style="' + this.cssStyle + '"';
         }
