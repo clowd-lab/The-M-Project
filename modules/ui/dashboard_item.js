@@ -40,6 +40,13 @@ M.DashboardItemView = M.View.extend(
      * @type String
      */
     label: null,
+    
+    /**
+     * The index of the dashboard item
+     *
+     * @type Number
+     */
+    index: null,
 
     /**
      * This property specifies the recommended events for this type of view.

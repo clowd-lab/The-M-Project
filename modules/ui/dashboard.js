@@ -181,7 +181,8 @@ M.DashboardView = M.View.extend(
                 icon: item.icon ? item.icon : '',
                 label: item.label ? item.label : (item.value ? item.value : ''),
                 parentView: this,
-                events: item.events
+                events: item.events,
+                index: itemIndex
             });
             var html = '';
 
