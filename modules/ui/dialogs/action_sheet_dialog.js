@@ -75,6 +75,13 @@ M.ActionSheetDialogView = M.DialogView.extend(
      * @type Object
      */
     callbacks: null,
+    
+    /**
+     * If set, creates an inline style
+     *
+     * @type String
+     */
+    Style: null,
 
     /**
      * Renders an action sheet dialog as a slide-up.
@@ -88,7 +95,8 @@ M.ActionSheetDialogView = M.DialogView.extend(
         this.html = '<div class="tmp-dialog-background"></div>';
 
         /* render title */
-        this.html += '<div id="' + this.id + '" class="tmp-actionsheet">';
+        this.html += '<div id="' + this.id + '" class="tmp-actionsheet"';
+        if( this.style !== null ) this.html += ' style="' + this.Style + '">';
         this.html += '<div class="tmp-dialog-header">';
         this.html += this.title ? this.title : '';
         this.html +='</div>';
