@@ -71,6 +71,19 @@ M.LoaderView = M.View.extend(
      * @param {Boolean} hideSpinner A boolean to specify whether to display a spinning wheel or not.
      */
     show: function(title, hideSpinner) {
+        var that = this;
+        window.setTimeout(function(){that.__show(title, hideSpinner)},100);
+        
+    },
+    
+    /**
+     * This method shows the default loader. You can specify the displayed label with the
+     * title parameter.
+     *
+     * @param {String} title The title for this loader.
+     * @param {Boolean} hideSpinner A boolean to specify whether to display a spinning wheel or not.
+     */
+    __show: function(title, hideSpinner) {
         this.refCount++;
         var title = title && typeof(title) === 'string' ? title : this.defaultTitle;
         if(this.refCount == 1){
