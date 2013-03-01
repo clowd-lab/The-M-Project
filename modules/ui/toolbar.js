@@ -156,7 +156,7 @@ M.ToolbarView = M.View.extend(
                 this.html += '<h1>' + this.value + '</h1>';
             } else if (this.childViews) {
                 if(this.anchorLocation == M.BOTTOM)
-                    this.html += '<div style="height:38px">';
+                    this.html += '<div style="height:76px">';
                 var childViews = this.getChildViewsAsArray();
                 var viewPositions = {};
                 for(var i in childViews) {
