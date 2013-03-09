@@ -986,9 +986,9 @@ div.ui-slider-switch { height: 32px; margin-left: 0; width: 5.8em; }
 a.ui-slider-handle-snapping { -webkit-transition: left 70ms linear; -moz-transition: left 70ms linear; }
 div.ui-slider-switch .ui-slider-handle {  margin-top: 1px; }
 .ui-slider-inneroffset { margin: 0 16px; position: relative; z-index: 1; }
-div.ui-slider-switch.ui-slider-mini { width: 5em; height: 29px; }
-div.ui-slider-switch.ui-slider-mini .ui-slider-inneroffset { margin: 0 15px 0 14px; }
-div.ui-slider-switch.ui-slider-mini .ui-slider-handle { width: 25px; height: 25px; margin: 1px 0 0 -13px; }
+div.ui-slider-switch.ui-slider-mini { width: 3em; height: 58px; }
+div.ui-slider-switch.ui-slider-mini .ui-slider-inneroffset { margin: 0 30px 0 28px; }
+div.ui-slider-switch.ui-slider-mini .ui-slider-handle { width: 50px; height: 50px; margin: 2px 0 0 -25px; }
 div.ui-slider-switch.ui-slider-mini a.ui-slider-handle .ui-btn-inner { height: 30px; width: 30px; padding: 0; margin: 0; }
 span.ui-slider-label { position: absolute; text-align: center; width: 100%; overflow: hidden; font-size: 16px; top: 0; line-height: 2; min-height: 100%; border-width: 0; white-space: nowrap; }
 .ui-slider-mini span.ui-slider-label { font-size: 28px; }
