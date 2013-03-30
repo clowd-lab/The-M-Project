@@ -265,7 +265,7 @@ M.TextFieldView = M.View.extend(
             
         } else {
             var type = this.inputType;
-            if(_.include(this.dateInputTypes, this.inputType) && !this.useNativeImplementationIfAvailable || ((initialText || placeholder) && this.inputType == M.INPUT_PASSWORD)) {
+            if(_.include(this.dateInputTypes, this.inputType) && !this.useNativeImplementationIfAvailable || ((this.initialText || placeholder) && this.inputType == M.INPUT_PASSWORD)) {
                 type = 'text';
             }
             
