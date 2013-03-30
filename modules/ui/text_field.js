@@ -238,18 +238,8 @@ M.TextFieldView = M.View.extend(
      */
     render: function() {
         this.computeValue();
-        this.html += '<div';
 
-        if(this.label && this.isGrouped) {
-            this.html += ' data-role="fieldcontain"';
-        }
-
-        if(this.cssClass) {
-            this.html += ' class="' + this.cssClass + '_container"';
-        }
-
-        this.html += '>';
-
+        this.html = '';
         if(this.label) {
             this.html += '<label for="' + (this.name ? this.name : this.id) + '">' + this.label;
             if(this.hasAsteriskOnLabel) {
@@ -265,16 +255,13 @@ M.TextFieldView = M.View.extend(
 
 		// If the device supports placeholders use the HTML5 placeholde attribute else use javascript workarround
         var placeholder = '';
-        var initialText = '';
-        if(M.Environment.modernizr.inputattributes['placeholder']) {
+        if(this.initialText) {
             placeholder = ' placeholder="' + this.initialText + '" ';
 
-        }else{
-            initialText = this.initialText;
         }
 
         if(this.hasMultipleLines) {
-            this.html += '<textarea cols="40" rows="8" name="' + (this.name ? this.name : this.id) + '" id="' + this.id + '"' + this.style() + placeholder + '>' + (this.value ? this.value : initialText) + '</textarea>';
+            this.html += '<textarea cols="40" rows="8" name="' + (this.name ? this.name : this.id) + '" id="' + this.id + '"' + this.style() + placeholder + '>' + (this.value ? this.value : '') + '</textarea>';
             
         } else {
             var type = this.inputType;
@@ -282,11 +269,9 @@ M.TextFieldView = M.View.extend(
                 type = 'text';
             }
             
-            this.html += '<input ' + (this.numberOfChars ? 'maxlength="' + this.numberOfChars + '"' : '') + placeholder + 'type="' + type + '" name="' + (this.name ? this.name : this.id) + '" id="' + this.id + '"' + this.style() + ' value="' + (this.value ? this.value : this.initialText) + '" />';
+            this.html += '<input ' + (this.numberOfChars ? 'maxlength="' + this.numberOfChars + '"' : '') + placeholder + 'type="' + type + '" name="' + (this.name ? this.name : this.id) + '" id="' + this.id + '"' + this.style() + ' value="' + (this.value ? this.value : '') + '" />';
         }
-
-        this.html += '</div>';
-
+        
         return this.html;
     },
 
@@ -311,11 +296,15 @@ M.TextFieldView = M.View.extend(
             keyup: {
                 target: this,
                 action: 'setValueFromDOM'
-            },
-            tap: {
-                target: this,
-                action: 'handleTap'
             }
+        };
+        /* add TAP handler only if needed */
+        var type = this.inputType;
+        if (_.include(this.dateInputTypes, this.inputType) && !this.useNativeImplementationIfAvailable) {
+            this.internalEvents['tap'] = {
+                target:this,
+                action:'handleTap'
+            };
         }
         this.bindToCaller(this, M.View.registerEvents)();
     },
@@ -391,9 +380,6 @@ M.TextFieldView = M.View.extend(
      * @param {Object} nextEvent The next event (external event), if specified.
      */
     gotFocus: function(id, event, nextEvent) {
-        if(this.initialText && (!this.value || this.initialText === this.value)) {
-            this.setValue('');
-        }
         this.hasFocus = YES;
 
         if(nextEvent) {
@@ -411,17 +397,8 @@ M.TextFieldView = M.View.extend(
      * @param {Object} nextEvent The next event (external event), if specified.
      */
     lostFocus: function(id, event, nextEvent) {
-        /* if this is a native date field, get the value from dom */
-        /* Commenting this out. Need to update form DOM for all cases. Will file an issue with M-Project
-         * if(_.include(this.dateInputTypes, this.inputType) && M.Environment.supportsInputType(this.inputType) && this.useNativeImplementationIfAvailable) {
-            this.setValueFromDOM();
-        }*/
         this.setValueFromDOM();
 
-        if(this.initialText && !this.value) {
-            this.setValue(this.initialText, NO);
-            this.value = '';
-        }
         this.hasFocus = NO;
 
         if(nextEvent) {
@@ -462,14 +439,17 @@ M.TextFieldView = M.View.extend(
      * @private
      */
     theme: function() {
-        if(this.initialText && !this.value && this.cssClassOnInit) {
-            this.addCssClass(this.cssClassOnInit);
+        /* trigger keyup event to make the text field autogrow */
+        var jDom = $('#'  + this.id);
+        if(this.value) {
+            jDom.trigger('keyup').textinput();
+            if(!this.isEnabled){
+	            jDom.textinput('disable');
+	        }
         }
 
-        /* trigger keyup event to make the text field autogrow */
-        if(this.value) {
-            $('#'  + this.id).trigger('keyup');
-        }
+        /* add container-css class */
+        jDom.parent().addClass(this.cssClass + '_container');
     },
 
     /**
@@ -527,27 +507,6 @@ M.TextFieldView = M.View.extend(
      */
     setValue: function(value, delegateUpdate, preventValueComputing) {
         this.value = value;
-
-		// Handle the classOnInit for initial text
-		if(value != this.initialText) {
-			if(this.cssClassOnInit) {
-				this.removeCssClass(this.cssClassOnInit);
-			}
-			if(this.inputType == M.INPUT_PASSWORD) {
-				// Set the field type to password
-				$('#' + this.id).prop('type','password');
-			}
-		}
-		else {
-            if(this.cssClassOnInit) {
-                this.addCssClass(this.cssClassOnInit);
-            }
-
-			if(this.inputType == M.INPUT_PASSWORD) {
-				// Set the field type to text
-				$('#' + this.id).prop('type','text');
-			}
-		}
 
         this.renderUpdate(preventValueComputing);
 
