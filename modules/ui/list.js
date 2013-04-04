@@ -603,6 +603,13 @@ M.ListView = M.View.extend(
         var html = '';
         if( this.noMargin === YES )
             html += 'style="margin: 0px" '
+	else if (this.doNotOverlapAtTop || this.doNotOverlapAtBottom ) {
+	    html += 'style=';
+	    if( this.doNotOverlapAtTop ) 
+		html += '"margin-top: 0px" ';
+	    if( this.doNotOverlapAtBottom )
+		html += '"margin-bottom: 0px" ';
+	}
         if(this.cssClass || this.doNotOverlapAtTop || this.doNotOverlapAtBottom) {
             html += ' class="'
                 + (this.cssClass ? this.cssClass : '')
