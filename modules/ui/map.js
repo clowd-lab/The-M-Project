@@ -497,6 +497,9 @@ M.MapView = M.View.extend(
                 map: that.map
             }));
         }
+        
+        // call this so markers get put in
+        this.renderUpdate();
 
         this.isInitialized = YES;
 
