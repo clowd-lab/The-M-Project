@@ -483,7 +483,7 @@ M.DatePickerView = M.View.extend(
             seconds: this.seconds,
 
             /* now set the width of the scrollers */
-            width: (M.Environment.getWidth() - 20) / 3 - 20 > 90 ? 90 : (M.Environment.getWidth() - 20) / 3 - 20,
+            width: (M.Environment.getWidth() - 40) / 3 - 40 > 180 ? 180 : (M.Environment.getWidth() - 40) / 3 - 40,
 
             beforeShow: function(input, scroller) {
                 that.bindToCaller(that, that.beforeShow, [input, scroller])();

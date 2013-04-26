@@ -284,7 +284,7 @@
 
 /* DATEPICKER */
 .dw > .ui-grid-a, .dw > [data-role="button"]:last-child {
-    margin-bottom: 15px;
+    margin-bottom: 30px;
 }
 
 .dwo {
@@ -293,7 +293,7 @@
 }
 
 .dww li {
-    font-size: 22px;
+    font-size: 42px;
 }
 
 
