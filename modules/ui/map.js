@@ -414,7 +414,7 @@ M.MapView = M.View.extend(
     didRetrieveConnectionStatus: function(connectionStatus) {
         if(connectionStatus === M.ONLINE) {
             $.getScript(
-                'http://maps.google.com/maps/api/js?' + (this.loadPlacesLibrary ? 'libraries=places&' : '') + 'sensor=true&callback=M.INITIAL_MAP.map.googleDidLoad'
+                'https://maps.googleapis.com/maps/api/js?' + (this.loadPlacesLibrary ? 'libraries=places&' : '') + 'sensor=true&callback=M.INITIAL_MAP.map.googleDidLoad'
             );
         } else {
             var callback = M.INITIAL_MAP.options ? M.INITIAL_MAP.options.callbacks : null;
@@ -580,6 +580,8 @@ M.MapView = M.View.extend(
             this.markers = _.select(this.markers, function(m) {
                 if(marker === m){
                     m.marker.setMap(null);
+                    m.marker.setVisible(false);
+                    m.marker = null;
                     didRemoveMarker = YES;
                 }
                 return !(marker === m);
@@ -600,6 +602,8 @@ M.MapView = M.View.extend(
     removeAllMarkers: function() {
         _.each(this.markers, function(marker) {
             marker.marker.setMap(null);
+            marker.marker.setVisible(false);
+            marker.marker = null;
         });
         this.markers = [];
     }
