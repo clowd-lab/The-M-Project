@@ -385,9 +385,9 @@ M.CarouselView = M.View.extend(
                         momentum: false,
                         hScrollbar: false,
                         vScrollbar: false,
-                        onScrollEnd: function () {
+                        onScrollEnd: function() {
                             var nextItem = null;
-                            if(that.direction === M.HORIZONTAL) {
+                            if (that.direction === M.HORIZONTAL) {
                                 var width = parseInt($('#' + that.id + ' ul.tmp-carousel-list li').css('width'));
                                 nextItem = Math.abs(Math.floor(that.iScroll.x / width)) + 1;
                             } else {
@@ -395,11 +395,11 @@ M.CarouselView = M.View.extend(
                                 nextItem = Math.abs(Math.ceil(that.iScroll.y / height)) + 1;
                             }
 
-			 /* since triggering the change doesn't work Eddie added this */
-			if( nextItem !== that.activeItem && that.events.change.action !== undefined )
-				that.events.change.action(that.id,nextItem);
+                            /* since triggering the change doesn't work Eddie added this */
+                            if (nextItem !== that.activeItem && that.events.change.action !== undefined)
+                                that.events.change.action(that.id, nextItem);
 
-                            if(nextItem !== that.activeItem) {
+                            if (nextItem !== that.activeItem) {
                                 $('#' + that.id + '_paginator_' + that.activeItem).removeClass('tmp-carousel-paginator-item-active');
                                 that.activeItem = nextItem;
                                 $('#' + that.id + '_paginator_' + that.activeItem).addClass('tmp-carousel-paginator-item-active');
