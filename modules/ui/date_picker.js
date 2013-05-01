@@ -604,7 +604,7 @@ M.DatePickerView = M.View.extend(
             }
         });
 
-        if(this.showDatePicker) {
+        //if(this.showDatePicker) {
             var grid = M.GridView.design({
                 childViews: 'confirm cancel',
                 layout: M.TWO_COLUMNS,
@@ -617,15 +617,15 @@ M.DatePickerView = M.View.extend(
             $('.dw').append(html);
             grid.theme();
             grid.registerEvents();
-        } else {
-            var html = confirmButton.render();
-            html += cancelButton.render();
-            $('.dw').append(html);
-            confirmButton.theme();
-            confirmButton.registerEvents();
-            cancelButton.theme();
-            cancelButton.registerEvents();
-        }
+//        } else {
+//            var html = confirmButton.render();
+//            html += cancelButton.render();
+//            $('.dw').append(html);
+//            confirmButton.theme();
+//            confirmButton.registerEvents();
+//            cancelButton.theme();
+//            cancelButton.registerEvents();
+//        }
 
         /* hide default buttons */
         $('#dw_cancel').hide();
