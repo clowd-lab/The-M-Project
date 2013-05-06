@@ -131,7 +131,22 @@ M.LabelView = M.View.extend(
      */
     renderUpdate: function() {
         this.computeValue();
-        $('#' + this.id).html(this.newLineToBreak ? this.nl2br(this.value) : this.value);
+        var html = '';
+        if(this.hyperlinkTarget && this.hyperlinkType) {
+            switch (this.hyperlinkType) {
+                case M.HYPERLINK_EMAIL:
+                    html = '<a rel="external" href="mailto:' + this.value + '">';
+                    break;
+                case M.HYPERLINK_WEBSITE:
+                    html = '<a rel="external" target="_blank" href="' + this.value + '">';
+                    break;
+                case M.HYPERLINK_PHONE:
+                    html = '<a rel="external" href="tel:' + this.value + '">';
+                    break;
+            }
+        } 
+        html += this.newLineToBreak ? this.nl2br(this.tabToSpaces ? this.tab2space(this.value) : this.value) : (this.tabToSpaces ? this.tab2space(this.value) : this.value);
+        $('#' + this.id).html(html);
     },
 
     /**
