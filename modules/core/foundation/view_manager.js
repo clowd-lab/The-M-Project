@@ -245,6 +245,17 @@ M.ViewManager = M.Object.extend(
       _.each(this.viewList, function(view){
         console.log(view.id + ': '+ view.type);
       });  
+    },
+            
+    getCurrentPageName: function() {
+        var page = this.getCurrentPage();
+        var pages = M.Application.pages;
+        for (var prop in pages) {
+            if (pages.hasOwnProperty(prop)) {
+                if (pages[ prop ] === page)
+                    return prop;
+            }
+        }
     }
 
 });
