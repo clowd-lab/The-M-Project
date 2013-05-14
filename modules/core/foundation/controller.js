@@ -100,7 +100,7 @@ M.Controller = M.Object.extend(
             }
 
             /* Save the current page in the view manager */
-            M.ViewManager.setCurrentPage(page);
+            //M.ViewManager.setCurrentPage(page); /* this is now done in on page load */
         } else {
             M.Logger.log('Page "' + page + '" not found', M.ERR);
         }

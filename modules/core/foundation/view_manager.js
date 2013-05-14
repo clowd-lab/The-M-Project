@@ -235,6 +235,9 @@ M.ViewManager = M.Object.extend(
      */
     setCurrentPage: function(page) {
         this.currentPage = page;
+        /*M.Logger.log('set Current Page called', M.DEBUG);
+        if( page && page.header && page.header.label && page.header.label.value ) M.Logger.log('in set current: page: ' + page.header.label.value);
+        if( page && page.header && page.header.value ) M.Logger.log('in set current: page: ' + page.header.value);*/
     },
 
     /**
