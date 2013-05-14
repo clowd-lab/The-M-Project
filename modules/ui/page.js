@@ -205,6 +205,8 @@ M.PageView = M.View.extend(
      * @param {Object} nextEvent The next event (external event), if specified.
      */
     pageDidLoad: function(id, event, nextEvent) {
+        if( typeof(M.ViewManager) !== 'undefined')
++            M.ViewManager.setCurrentPage(M.ViewManager.getViewById(id));
         /* delegate event to external handler, if specified */
         if(nextEvent) {
             M.EventDispatcher.callHandler(nextEvent, event, NO, [this.isFirstLoad]);
