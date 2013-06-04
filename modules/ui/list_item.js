@@ -78,6 +78,8 @@ M.ListItemView = M.View.extend(
      * @type Boolean
      */
     isSelectable: YES,
+    
+    dataTheme: null,
 
     /**
      * This property can be used to specify a button that appears on a swipe left or swipe right
@@ -126,6 +128,9 @@ M.ListItemView = M.View.extend(
      */
     render: function() {
         this.html = '<li id="' + this.id + '"' + this.style();
+        
+        if(this.dataTheme)
+            this.html += ' data-theme="' + this.dataTheme + '"';
 
         if(this.isDivider) {
             this.html += ' data-role="list-divider"';
