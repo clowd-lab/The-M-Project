@@ -113,6 +113,11 @@ M.ToolbarView = M.View.extend(
      * @type Boolean
      */
     toggleOnTap: NO,
+    
+    /**
+     * Optional css class to style title
+     */
+    titleClass: null,
 
     /**
      * Renders a toolbar as a div tag with corresponding data-role attribute and inner
@@ -197,7 +202,10 @@ M.ToolbarView = M.View.extend(
                             this.html += '</div>';
                             break;
                         case M.CENTER:
-                            this.html += '<h1>';
+                            if( this.titleClass )
+                                this.html += '<h1 class="' + this.titleClass + '">';
+                            else
+                                this.html += '<h1>';
                             this.html += view.render();
                             this.html += '</h1>';
                             break;
