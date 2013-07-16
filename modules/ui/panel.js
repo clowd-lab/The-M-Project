@@ -67,6 +67,12 @@ M.PanelView = M.View.extend(
     * @type String
     */
     display:  M.REVEAL,
+    
+    /**
+     * sets the data-position-fixed property.  If set to YES, it will fix the panel vertically so 
+     * even if the page scrolls down, the panel will always show from the top.
+     */
+    fixed: NO,
 
     /**
     * Defines the jqm theme to use.
@@ -108,6 +114,8 @@ M.PanelView = M.View.extend(
         html += this.dataTheme ? ' data-theme="' + this.dataTheme + '"' : '';
         html += ' data-position="' + (this.position || M.LEFT).  toLowerCase() + '"';
         html += ' data-display="'  + (this.display  || M.REVEAL).toLowerCase() + '"';
+        if( this.fixed )
+            html += ' data-position-fixed="true"';
         return html;
     },
 
